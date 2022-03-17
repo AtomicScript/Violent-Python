@@ -1,0 +1,8 @@
+python-nmap
+pyPdf
+Pygeoip
+mechanize
+BeautifulSoup4
+python-bluez
+bluetooth
+python-obexftp
