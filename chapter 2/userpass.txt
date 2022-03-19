@@ -1,0 +1,17 @@
+administrator:password
+admin:12345
+root:secret
+root:msfadmin
+guest:guest
+root:toor
+msfadmin:msfadmin
+ftp:msfadmin
+ftp:password
+ftp:12345
+ftp:secret
+ftp:s3cr3t
+ftp:user
+ftpuser:ftpuser
+root:
+nobody:nobody
+ftp:ftp
