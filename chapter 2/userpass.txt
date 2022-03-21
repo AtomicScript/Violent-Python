@@ -15,3 +15,4 @@ ftpuser:ftpuser
 root:
 nobody:nobody
 ftp:ftp
+genshi87:Genshi_87
