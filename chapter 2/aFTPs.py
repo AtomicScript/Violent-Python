@@ -48,7 +48,7 @@ def bruteLogin(hostname, passwdFile):
 def returnDefault(ftp):
     print(f"[+] Analyzing a vulnerable FTP server")
     try:
-        ftp.cwd('/var/www/twiki')
+        ftp.cwd('/var/www/')
         # nlst lists the directory content
         # nlst checks each file returned by the nlst agaisnt default web page file names
         dirList = ftp.nlst()

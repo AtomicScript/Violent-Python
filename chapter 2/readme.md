@@ -7,7 +7,7 @@
 - [x] Building a port scanner
 - [x] Building a port scanner using python-nmap
 - [ ] Constructing an SSH Botnet
-- [ ] Mass Compromise with FTP
+- [x] Mass Compromise with FTP
 - [ ] Replicate Conficker
 - [ ] Your Own Zero Day Attack
 
