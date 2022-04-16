@@ -6,17 +6,15 @@
 
 - [x] Building a port scanner
 - [x] Building a port scanner using python-nmap
-- [ ] Constructing an SSH Botnet
+- [ ] Constructing an SSH Botnet [problems with ssh ]
 - [x] Mass Compromise with FTP
 - [ ] Replicate Conficker
 - [ ] Your Own Zero Day Attack
 
+Metasploit = 192.168.52.132
 
 
 ### Notes
-downloaded Ubuntu iso on vmware to test the codes on
-- i will set up an SSH service
-- i will set up apache2
 
 use Metasploit framework in order to create a malicious server and page hosted!
 

@@ -4,8 +4,6 @@
 # nmap scan that uses nmap to scan the targeted port and and host
 # main that parses
 
-
-# metaspoitabl e= 192.168.52.128
 import nmap
 from optparse import OptionParser
 
